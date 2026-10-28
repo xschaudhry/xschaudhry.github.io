@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Try a live AI quoting agent, lead follow-up, quote-accuracy checker and owner dashboard built for auto, HVAC, plumbing and contracting shops.">
+<meta name="theme-color" content="#080D14">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AI agents for service shops · Chaudhry Usman">
 <meta property="og:description" content="Try a live AI quoting agent, lead follow-up, quote-accuracy checker and owner dashboard built for auto, HVAC, plumbing and contracting shops.">
@@ -13,33 +14,28 @@
 <title>Chaudhry Usman · AI Agents for Service Shops</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
 <style>
-/* Layout: a service work order. Wide sections ruled like an estimate pad, each with a working demo beside its pitch. */
+/* Layout: TRXmode brand, dark-first by design. Each section pairs the pitch with a working demo; one lime glow behind the hero. */
 :root{
-  --paper:#F2F4F6; --sheet:#FFFFFF; --ink:#10213A; --muted:#55667E; --line:#D5DCE5;
-  --accent:#1F5FD1; --accent-ink:#FFFFFF; --mark:#F2B705; --mark-soft:#FDF1C7;
-  --ok:#1E8455; --ok-soft:#DDF2E7; --bad:#B9411A; --bad-soft:#F9E3DA;
-  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --paper:#080D14; --sheet:#101923; --sheet-2:#16212D; --ink:#EEF2F4; --muted:#9CAEBB; --line:#25313D;
+  --accent:#C7F24E; --accent-ink:#17200B; --bubble:#2B5CE6; --bubble-ink:#FFFFFF;
+  --mark:#F5B544; --mark-soft:rgba(245,181,68,.12);
+  --ok:#C7F24E; --ok-soft:rgba(199,242,78,.12); --bad:#FF7A59; --bad-soft:rgba(255,122,89,.12);
+  --display:"Space Grotesk","Arial Narrow",Helvetica,sans-serif;
+  --body:"Poppins","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#0C141F; --sheet:#132033; --ink:#E5ECF5; --muted:#93A4BB; --line:#24364F;
-  --accent:#6C9EFF; --accent-ink:#0C141F; --mark:#F5C842; --mark-soft:#3A3212;
-  --ok:#4FCB8F; --ok-soft:#12321F; --bad:#FF8A5E; --bad-soft:#3A1D12; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --paper:#0C141F; --sheet:#132033; --ink:#E5ECF5; --muted:#93A4BB; --line:#24364F;
-  --accent:#6C9EFF; --accent-ink:#0C141F; --mark:#F5C842; --mark-soft:#3A3212;
-  --ok:#4FCB8F; --ok-soft:#12321F; --bad:#FF8A5E; --bad-soft:#3A1D12; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
 .wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.02;letter-spacing:.005em;text-wrap:balance;margin:0}
-h1{font-size:clamp(2.6rem,6vw,4.6rem);text-transform:uppercase}
-h2{font-size:clamp(2rem,4vw,3rem);text-transform:uppercase}
-h3{font-size:1.5rem;text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.05;letter-spacing:-.02em;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.4rem,5.4vw,4.2rem)}
+h2{font-size:clamp(1.8rem,3.6vw,2.7rem)}
+h3{font-size:1.3rem}
+h2 em,h1 em{font-style:normal;color:var(--accent)}
 p{margin:0}
 .eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .lede{font-size:1.15rem;color:var(--muted);max-width:56ch}
@@ -48,7 +44,8 @@ p{margin:0}
 a{color:var(--accent)}
 button{font:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.btn{display:inline-flex;align-items:center;gap:.5em;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:.7em 1.1em;border-radius:4px;font-weight:600;text-decoration:none}
+.btn{display:inline-flex;align-items:center;gap:.5em;border:1.5px solid var(--line);background:transparent;color:var(--ink);padding:.7em 1.2em;border-radius:8px;font-weight:600;font-size:.92rem;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn:hover{transform:translateY(-1px)}
 .chip{border:1px solid var(--line);background:var(--sheet);color:var(--ink);padding:.45em .8em;border-radius:999px;font-size:.9rem}
@@ -57,7 +54,7 @@ button{font:inherit;cursor:pointer}
 
 /* top bar */
 .top{padding-block:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-.brand{font-family:var(--display);font-size:1.5rem;text-transform:uppercase;font-weight:700}
+.brand{font-family:var(--display);font-size:1.35rem;font-weight:700;letter-spacing:-.01em}
 .brand span{color:var(--accent)}
 .top nav{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
 .top nav a{color:var(--muted);text-decoration:none}
@@ -70,32 +67,32 @@ section{padding-block:72px;border-top:1px solid var(--line)}
 .pitch{display:grid;gap:18px;align-content:start}
 .points{display:grid;gap:10px;padding:0;margin:0;list-style:none}
 .points li{display:grid;grid-template-columns:22px 1fr;gap:8px}
-.points li::before{content:"";width:12px;height:12px;margin-top:.45em;border:2px solid var(--accent);border-radius:2px}
+.points li::before{content:"";width:8px;height:8px;margin-top:.6em;margin-left:2px;background:var(--accent);border-radius:50%}
 
 /* hero */
-.hero{border-top:0;padding-block:40px 72px}
-.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--mark) 62%);padding:0 .08em}
+.hero{border-top:0;padding-block:40px 72px;background:radial-gradient(60% 70% at 85% 30%,rgba(199,242,78,.10),transparent 70%)}
+.eyebrow.lime{color:var(--accent)}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
 .codelink{font-family:var(--mono);font-size:.82rem;text-decoration:none;justify-self:start}
 .codelink:hover{text-decoration:underline}
 .shopline{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:14px}
 
 /* phone-style chat card */
-.card{background:var(--sheet);border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 40px -24px rgba(16,33,58,.45);overflow:hidden}
+.card{background:var(--sheet);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px -30px rgba(0,0,0,.8);overflow:hidden}
 .chat-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
 .chat-head b{font-weight:600}
 .live{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--ok)}
 .live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok)}
 .msgs{height:440px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
 .msg{max-width:85%;padding:.6em .85em;border-radius:12px;font-size:.95rem;animation:pop .25s ease-out}
-.msg.bot{background:var(--paper);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px}
-.msg.me{background:var(--accent);color:var(--accent-ink);align-self:flex-end;border-bottom-right-radius:3px}
+.msg.bot{background:var(--sheet-2);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px}
+.msg.me{background:var(--bubble);color:var(--bubble-ink);align-self:flex-end;border-bottom-right-radius:3px}
 .msg.typing{color:var(--muted);font-family:var(--mono);font-size:.85rem}
 @keyframes pop{from{transform:translateY(6px);opacity:.4}to{transform:none;opacity:1}}
 .chips{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-top:1px solid var(--line);min-height:58px}
 .chat-input{display:flex;gap:8px;padding:0 16px 16px}
 .chat-input input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;padding:.6em .8em;font:inherit}
-.chat-input button{border:0;background:var(--ink);color:var(--paper);border-radius:6px;padding:0 1em;font-weight:600}
+.chat-input button{border:0;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:0 1.1em;font-weight:600}
 
 /* estimate slip */
 .slip{align-self:stretch;max-width:100%;border:1.5px solid var(--ink);border-radius:4px;background:var(--sheet);font-size:.88rem;animation:pop .3s ease-out}
@@ -128,11 +125,11 @@ section{padding-block:72px;border-top:1px solid var(--line)}
 .timeline li:last-child .rail::before{bottom:auto;height:10px}
 .ev{padding-bottom:20px;display:grid;gap:6px}
 .ev b{font-weight:600}
-.ev q{display:block;quotes:none;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:.55em .8em;font-size:.92rem}
+.ev q{display:block;quotes:none;background:var(--sheet-2);border:1px solid var(--line);border-radius:8px;padding:.55em .8em;font-size:.92rem}
 .pill{justify-self:start;font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding:.25em .6em;border-radius:3px}
 .pill.ok{background:var(--ok-soft);color:var(--ok)}
 .pill.bad{background:var(--bad-soft);color:var(--bad)}
-.pill.ai{background:var(--accent);color:var(--accent-ink)}
+.pill.ai{background:var(--bubble);color:var(--bubble-ink)}
 
 /* calibration */
 .cal-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
@@ -168,7 +165,7 @@ section{padding-block:72px;border-top:1px solid var(--line)}
 .tile .k{font-size:.8rem;color:var(--muted)}
 .tile.warn{border-color:var(--mark);background:var(--mark-soft)}
 .actions{display:grid;gap:8px;margin-top:14px}
-.actions button{text-align:left;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;padding:.65em .8em;font-weight:500;display:flex;justify-content:space-between;gap:8px}
+.actions button{text-align:left;border:1px solid var(--line);background:var(--sheet-2);color:var(--ink);border-radius:6px;padding:.65em .8em;font-weight:500;display:flex;justify-content:space-between;gap:8px}
 .actions button:hover{border-color:var(--accent)}
 .actions button span{color:var(--muted);font-family:var(--mono);font-size:.8rem}
 .log{margin-top:12px;font-family:var(--mono);font-size:.78rem;color:var(--muted);display:grid;gap:4px;min-height:3.6em}
@@ -180,7 +177,7 @@ section{padding-block:72px;border-top:1px solid var(--line)}
 .qa-out cite{display:block;font-style:normal;font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-top:6px}
 
 /* process */
-.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1.5px solid var(--ink);border-radius:6px;background:var(--sheet)}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:14px;background:var(--sheet)}
 .steps li{padding:20px;display:grid;gap:8px;align-content:start}
 .steps li+li{border-left:1px dashed var(--line)}
 .steps .n{font-family:var(--display);font-size:2.4rem;color:var(--accent);line-height:1}
@@ -222,8 +219,8 @@ footer{padding-block:28px;border-top:1px solid var(--line);color:var(--muted);fo
 <section class="hero" id="quote">
   <div class="wrap split">
     <div class="pitch">
-      <p class="eyebrow">AI agents for auto, HVAC, plumbing &amp; contracting shops</p>
-      <h1>Your quote goes out while the customer is <em>still on the phone</em></h1>
+      <p class="eyebrow lime">AI agents · for auto, HVAC, plumbing &amp; contracting shops</p>
+      <h1>Your quote goes out while the customer is <em>still on the phone.</em></h1>
       <p class="lede">I build AI agents that write quotes from your own price book, follow up on every lead, and answer your crew's questions. You approve everything before a customer sees it.</p>
       <ul class="points">
         <li>Quotes use your labor rate, your parts prices and your tax rules</li>
@@ -258,7 +255,7 @@ footer{padding-block:28px;border-top:1px solid var(--line);color:var(--muted);fo
   <div class="wrap split">
     <div class="pitch">
       <p class="eyebrow">Agent 02 · Lead follow-up</p>
-      <h2>A lead that waits until morning usually calls someone else</h2>
+      <h2>A lead that waits until morning <em>calls someone else.</em></h2>
       <p class="lede">Most people contact two or three shops and book whoever answers first. The follow-up agent replies in seconds, day or night, offers real open slots, and follows up when someone goes quiet.</p>
       <ul class="points">
         <li>Answers website forms, texts and missed calls</li>
@@ -281,7 +278,7 @@ footer{padding-block:28px;border-top:1px solid var(--line);color:var(--muted);fo
   <div class="wrap split">
     <div class="pitch">
       <p class="eyebrow">Calibration kit</p>
-      <h2>I check every agent against your own quotes before it goes live</h2>
+      <h2>Checked against <em>your own quotes</em> before it goes live.</h2>
       <p class="lede">You give me past jobs you've already quoted by hand. The agent quotes the same jobs, and any quote more than 5% away from yours gets flagged. I fix the cause and test again.</p>
       <ul class="points">
         <li>You can see exactly where the agent and you disagree</li>
@@ -311,7 +308,7 @@ footer{padding-block:28px;border-top:1px solid var(--line);color:var(--muted);fo
   <div class="wrap">
     <div class="pitch" style="margin-bottom:28px;max-width:760px">
       <p class="eyebrow">Command center</p>
-      <h2>Your shop's agents in one screen</h2>
+      <h2>Your shop's agents, <em>one screen.</em></h2>
       <p class="lede">See what's waiting for you, clear it with one button, and let your crew ask the shop handbook instead of interrupting you. The agent remembers each customer's history.</p>
       <a class="codelink" href="https://github.com/xschaudhry/command-center-template">Code on GitHub: command-center-template →</a>
     </div>
@@ -366,7 +363,7 @@ footer{padding-block:28px;border-top:1px solid var(--line);color:var(--muted);fo
 <section id="contact">
   <div class="wrap contact">
     <p class="eyebrow">Fixed-price builds or remote hourly work</p>
-    <h2>Have quotes piling up? Let's talk.</h2>
+    <h2>Have quotes piling up? <em>Let's talk.</em></h2>
     <p class="lede">Tell me what kind of shop you run and where the work slows down. I'll tell you honestly whether an agent would help.</p>
     <div class="contact-row">
       <code id="email">usman@trxmode.com</code>
