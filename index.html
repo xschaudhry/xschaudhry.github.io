@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Try a live AI quoting agent, lead follow-up, quote-accuracy checker and owner dashboard built for auto, HVAC, plumbing and contracting shops.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI agents for service shops · Chaudhry Usman">
+<meta property="og:description" content="Try a live AI quoting agent, lead follow-up, quote-accuracy checker and owner dashboard built for auto, HVAC, plumbing and contracting shops.">
+<meta property="og:url" content="https://xschaudhry.github.io/">
+<meta name="twitter:card" content="summary">
+<style>body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Chaudhry Usman · AI Agents for Service Shops</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a service work order. Wide sections ruled like an estimate pad, each with a working demo beside its pitch. */
+:root{
+  --paper:#F2F4F6; --sheet:#FFFFFF; --ink:#10213A; --muted:#55667E; --line:#D5DCE5;
+  --accent:#1F5FD1; --accent-ink:#FFFFFF; --mark:#F2B705; --mark-soft:#FDF1C7;
+  --ok:#1E8455; --ok-soft:#DDF2E7; --bad:#B9411A; --bad-soft:#F9E3DA;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0C141F; --sheet:#132033; --ink:#E5ECF5; --muted:#93A4BB; --line:#24364F;
+  --accent:#6C9EFF; --accent-ink:#0C141F; --mark:#F5C842; --mark-soft:#3A3212;
+  --ok:#4FCB8F; --ok-soft:#12321F; --bad:#FF8A5E; --bad-soft:#3A1D12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0C141F; --sheet:#132033; --ink:#E5ECF5; --muted:#93A4BB; --line:#24364F;
+  --accent:#6C9EFF; --accent-ink:#0C141F; --mark:#F5C842; --mark-soft:#3A3212;
+  --ok:#4FCB8F; --ok-soft:#12321F; --bad:#FF8A5E; --bad-soft:#3A1D12; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.02;letter-spacing:.005em;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.6rem,6vw,4.6rem);text-transform:uppercase}
+h2{font-size:clamp(2rem,4vw,3rem);text-transform:uppercase}
+h3{font-size:1.5rem;text-transform:uppercase}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.15rem;color:var(--muted);max-width:56ch}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;gap:.5em;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:.7em 1.1em;border-radius:4px;font-weight:600;text-decoration:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{transform:translateY(-1px)}
+.chip{border:1px solid var(--line);background:var(--sheet);color:var(--ink);padding:.45em .8em;border-radius:999px;font-size:.9rem}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.tag{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:.2em .55em;border-radius:3px;background:var(--mark-soft);color:var(--ink);border:1px dashed var(--mark)}
+
+/* top bar */
+.top{padding-block:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-size:1.5rem;text-transform:uppercase;font-weight:700}
+.brand span{color:var(--accent)}
+.top nav{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
+.top nav a{color:var(--muted);text-decoration:none}
+.top nav a:hover{color:var(--ink)}
+
+/* sections */
+section{padding-block:72px;border-top:1px solid var(--line)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:48px;align-items:start}
+.split>*{min-width:0}
+.pitch{display:grid;gap:18px;align-content:start}
+.points{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+.points li{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.points li::before{content:"";width:12px;height:12px;margin-top:.45em;border:2px solid var(--accent);border-radius:2px}
+
+/* hero */
+.hero{border-top:0;padding-block:40px 72px}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--mark) 62%);padding:0 .08em}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.codelink{font-family:var(--mono);font-size:.82rem;text-decoration:none;justify-self:start}
+.codelink:hover{text-decoration:underline}
+.shopline{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:14px}
+
+/* phone-style chat card */
+.card{background:var(--sheet);border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 40px -24px rgba(16,33,58,.45);overflow:hidden}
+.chat-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.chat-head b{font-weight:600}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--ok)}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.msgs{height:440px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.msg{max-width:85%;padding:.6em .85em;border-radius:12px;font-size:.95rem;animation:pop .25s ease-out}
+.msg.bot{background:var(--paper);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px}
+.msg.me{background:var(--accent);color:var(--accent-ink);align-self:flex-end;border-bottom-right-radius:3px}
+.msg.typing{color:var(--muted);font-family:var(--mono);font-size:.85rem}
+@keyframes pop{from{transform:translateY(6px);opacity:.4}to{transform:none;opacity:1}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-top:1px solid var(--line);min-height:58px}
+.chat-input{display:flex;gap:8px;padding:0 16px 16px}
+.chat-input input{flex:1;min-width:0;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;padding:.6em .8em;font:inherit}
+.chat-input button{border:0;background:var(--ink);color:var(--paper);border-radius:6px;padding:0 1em;font-weight:600}
+
+/* estimate slip */
+.slip{align-self:stretch;max-width:100%;border:1.5px solid var(--ink);border-radius:4px;background:var(--sheet);font-size:.88rem;animation:pop .3s ease-out}
+.slip-head{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1.5px solid var(--ink);font-family:var(--mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.slip table{width:100%;border-collapse:collapse}
+.slip td{padding:6px 12px;border-bottom:1px dashed var(--line);vertical-align:top}
+.slip td:last-child{text-align:right;font-family:var(--mono);white-space:nowrap}
+.slip td small{display:block;color:var(--muted);font-size:.78rem}
+.slip .tot td{border-bottom:0;padding-top:4px;padding-bottom:4px;color:var(--muted)}
+.slip .grand td{font-weight:600;color:var(--ink);font-size:1.05rem;border-top:1.5px solid var(--ink);padding-top:8px}
+.slip .note{padding:10px 12px;color:var(--muted);font-size:.82rem;border-top:1px dashed var(--line)}
+.slip .act{padding:0 12px 12px;display:flex;gap:8px;flex-wrap:wrap}
+.slip .act button{border:0;background:var(--accent);color:var(--accent-ink);padding:.55em .9em;border-radius:4px;font-weight:600;font-size:.85rem}
+.slip .act button[disabled]{background:var(--ok-soft);color:var(--ok);cursor:default}
+.speed{font-family:var(--mono);font-size:.75rem;color:var(--muted);align-self:flex-start}
+
+/* follow-up timeline */
+.toggle{display:inline-flex;border:1.5px solid var(--ink);border-radius:6px;overflow:hidden}
+.toggle button{border:0;background:transparent;color:var(--ink);padding:.55em 1em;font-weight:600}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.timeline{list-style:none;margin:0;padding:20px;display:grid;gap:0}
+.timeline li{display:grid;grid-template-columns:86px 18px minmax(0,1fr);gap:12px;animation:pop .3s ease-out both}
+.timeline time{font-family:var(--mono);font-size:.78rem;color:var(--muted);padding-top:2px;text-align:right}
+.rail{position:relative}
+.rail::before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--line)}
+.rail::after{content:"";position:absolute;left:3px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--sheet);border:2px solid var(--muted)}
+.timeline li.agent .rail::after{border-color:var(--accent);background:var(--accent)}
+.timeline li.win .rail::after{border-color:var(--ok);background:var(--ok)}
+.timeline li.lose .rail::after{border-color:var(--bad);background:var(--bad)}
+.timeline li:last-child .rail::before{bottom:auto;height:10px}
+.ev{padding-bottom:20px;display:grid;gap:6px}
+.ev b{font-weight:600}
+.ev q{display:block;quotes:none;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:.55em .8em;font-size:.92rem}
+.pill{justify-self:start;font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding:.25em .6em;border-radius:3px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.ai{background:var(--accent);color:var(--accent-ink)}
+
+/* calibration */
+.cal-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.cal-bar label{display:flex;align-items:center;gap:10px;font-size:.9rem}
+.cal-bar input{accent-color:var(--accent)}
+.score{font-family:var(--mono);font-size:.85rem}
+.score b{color:var(--ok)}
+.score .f{color:var(--bad)}
+.tablebox{overflow-x:auto}
+.cal{width:100%;border-collapse:collapse;font-size:.9rem;min-width:620px}
+.cal th{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;font-weight:500;padding:10px 12px;border-bottom:1.5px solid var(--ink)}
+.cal th:first-child,.cal td:first-child{text-align:left}
+.cal td{padding:9px 12px;border-bottom:1px dashed var(--line);text-align:right;font-variant-numeric:tabular-nums}
+.cal td.mono{font-family:var(--mono)}
+.cal tr.flag{background:var(--mark-soft)}
+.cal tr.flag td:first-child{box-shadow:inset 4px 0 0 var(--mark)}
+.cal tr.flag{cursor:pointer}
+.cal .why td{background:var(--sheet);text-align:left;color:var(--muted);font-size:.85rem;padding-top:4px}
+.track{position:relative;width:140px;height:14px;margin-left:auto}
+.track .band{position:absolute;top:0;bottom:0;background:var(--ok-soft);border-left:1px solid var(--ok);border-right:1px solid var(--ok)}
+.track .zero{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--muted)}
+.track .dot{position:absolute;top:2px;width:10px;height:10px;border-radius:50%;margin-left:-5px;background:var(--ok)}
+.flag .track .dot{background:var(--bad)}
+.axis{display:flex;justify-content:space-between;width:140px;margin-left:auto;font-family:var(--mono);font-size:.62rem;color:var(--muted);text-transform:none;letter-spacing:0}
+
+/* dashboard */
+.dash{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+.dash>div{padding:18px;min-width:0}
+.dash>div+div{border-left:1px solid var(--line)}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.tile .v{font-family:var(--display);font-size:2.1rem;font-weight:700;line-height:1}
+.tile .k{font-size:.8rem;color:var(--muted)}
+.tile.warn{border-color:var(--mark);background:var(--mark-soft)}
+.actions{display:grid;gap:8px;margin-top:14px}
+.actions button{text-align:left;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;padding:.65em .8em;font-weight:500;display:flex;justify-content:space-between;gap:8px}
+.actions button:hover{border-color:var(--accent)}
+.actions button span{color:var(--muted);font-family:var(--mono);font-size:.8rem}
+.log{margin-top:12px;font-family:var(--mono);font-size:.78rem;color:var(--muted);display:grid;gap:4px;min-height:3.6em}
+.log div{animation:pop .25s ease-out}
+.mem{border:1px dashed var(--accent);border-radius:6px;padding:10px 12px;font-size:.88rem;display:grid;gap:4px;margin-bottom:14px}
+.mem .eyebrow{color:var(--accent)}
+.qa{display:grid;gap:8px}
+.qa-out{border-left:3px solid var(--accent);padding:.4em .8em;font-size:.92rem;min-height:4.5em}
+.qa-out cite{display:block;font-style:normal;font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-top:6px}
+
+/* process */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1.5px solid var(--ink);border-radius:6px;background:var(--sheet)}
+.steps li{padding:20px;display:grid;gap:8px;align-content:start}
+.steps li+li{border-left:1px dashed var(--line)}
+.steps .n{font-family:var(--display);font-size:2.4rem;color:var(--accent);line-height:1}
+
+/* contact */
+.contact{display:grid;gap:20px;justify-items:start}
+.contact-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.contact-row code{font-family:var(--mono);background:var(--sheet);border:1px solid var(--line);padding:.55em .8em;border-radius:4px;user-select:all}
+footer{padding-block:28px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+
+@media (max-width:860px){
+  .split{grid-template-columns:minmax(0,1fr);gap:32px}
+  .dash{grid-template-columns:minmax(0,1fr)}
+  .dash>div+div{border-left:0;border-top:1px solid var(--line)}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps li:nth-child(3){border-left:0}
+  .steps li:nth-child(n+3){border-top:1px dashed var(--line)}
+  section{padding-block:52px}
+}
+@media (max-width:480px){
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .steps li+li{border-left:0;border-top:1px dashed var(--line)}
+  .msgs{height:400px}
+  .timeline{padding:16px 12px}
+  .timeline li{grid-template-columns:64px 18px minmax(0,1fr);gap:8px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <div class="brand">Chaudhry Usman <span>/</span> TRXmode</div>
+  <nav aria-label="Sections">
+    <a href="#quote">Quoting</a><a href="#followup">Lead follow-up</a><a href="#accuracy">Accuracy</a><a href="#dashboard">Dashboard</a><a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="quote">
+  <div class="wrap split">
+    <div class="pitch">
+      <p class="eyebrow">AI agents for auto, HVAC, plumbing &amp; contracting shops</p>
+      <h1>Your quote goes out while the customer is <em>still on the phone</em></h1>
+      <p class="lede">I build AI agents that write quotes from your own price book, follow up on every lead, and answer your crew's questions. You approve everything before a customer sees it.</p>
+      <ul class="points">
+        <li>Quotes use your labor rate, your parts prices and your tax rules</li>
+        <li>Asks the questions a good service advisor would ask</li>
+        <li>Sends every quote to you for approval before it reaches the customer</li>
+      </ul>
+      <div class="hero-cta">
+        <a class="btn primary" href="#contact">Talk about your shop</a>
+        <a class="btn" href="#accuracy">See how I check accuracy</a>
+      </div>
+      <a class="codelink" href="https://github.com/xschaudhry/quote-agent-demo">Code on GitHub: quote-agent-demo →</a>
+      <div class="shopline"><span>Demo shop: Riverside Auto</span><span>Labor $135/hr</span><span>Tax 8.25% on parts</span><span>Simulated data</span></div>
+    </div>
+
+    <div class="card" aria-label="Quoting agent demo">
+      <div class="chat-head">
+        <div><b>Riverside Auto</b> <span class="eyebrow">· Quote assistant</span></div>
+        <span class="live">Try it</span>
+      </div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <div class="chips" id="chips"></div>
+      <form class="chat-input" id="chatForm">
+        <label for="chatText" class="eyebrow" hidden>Message</label>
+        <input id="chatText" autocomplete="off" placeholder="Describe a car problem, e.g. my brakes squeal">
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="followup">
+  <div class="wrap split">
+    <div class="pitch">
+      <p class="eyebrow">Agent 02 · Lead follow-up</p>
+      <h2>A lead that waits until morning usually calls someone else</h2>
+      <p class="lede">Most people contact two or three shops and book whoever answers first. The follow-up agent replies in seconds, day or night, offers real open slots, and follows up when someone goes quiet.</p>
+      <ul class="points">
+        <li>Answers website forms, texts and missed calls</li>
+        <li>Offers times from your real calendar</li>
+        <li>Follows up on quotes nobody has replied to</li>
+      </ul>
+      <div class="toggle" role="group" aria-label="Compare">
+        <button type="button" id="tWith" aria-pressed="true">With the agent</button>
+        <button type="button" id="tWithout" aria-pressed="false">Without</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="chat-head"><div><b>Northside Plumbing</b> <span class="eyebrow">· One real-world lead</span></div><span class="tag">Example</span></div>
+      <ol class="timeline" id="timeline"></ol>
+    </div>
+  </div>
+</section>
+
+<section id="accuracy">
+  <div class="wrap split">
+    <div class="pitch">
+      <p class="eyebrow">Calibration kit</p>
+      <h2>I check every agent against your own quotes before it goes live</h2>
+      <p class="lede">You give me past jobs you've already quoted by hand. The agent quotes the same jobs, and any quote more than 5% away from yours gets flagged. I fix the cause and test again.</p>
+      <ul class="points">
+        <li>You can see exactly where the agent and you disagree</li>
+        <li>Every flag comes with a reason and a fix</li>
+        <li>Move the slider to set how strict you want it</li>
+      </ul>
+      <a class="codelink" href="https://github.com/xschaudhry/calibration-kit">Code on GitHub: calibration-kit →</a>
+    </div>
+    <div class="card">
+      <div class="cal-bar">
+        <label for="thr">Flag if off by more than <b class="mono num" id="thrVal">5%</b>
+          <input type="range" id="thr" min="1" max="10" step="0.5" value="5"></label>
+        <span class="score" id="score"></span>
+      </div>
+      <div class="tablebox">
+        <table class="cal">
+          <thead><tr><th>Job</th><th>Your quote</th><th>Agent quote</th><th>Difference</th><th><div class="axis"><span>−10%</span><span>0</span><span>+10%</span></div></th></tr></thead>
+          <tbody id="calBody"></tbody>
+        </table>
+      </div>
+      <p class="note" style="padding:12px 16px;color:var(--muted);font-size:.82rem">Example jobs. Click a highlighted row to see why it was flagged.</p>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="wrap">
+    <div class="pitch" style="margin-bottom:28px;max-width:760px">
+      <p class="eyebrow">Command center</p>
+      <h2>Your shop's agents in one screen</h2>
+      <p class="lede">See what's waiting for you, clear it with one button, and let your crew ask the shop handbook instead of interrupting you. The agent remembers each customer's history.</p>
+      <a class="codelink" href="https://github.com/xschaudhry/command-center-template">Code on GitHub: command-center-template →</a>
+    </div>
+    <div class="card dash">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px"><h3>Today</h3><span class="tag">Example day</span></div>
+        <div class="tiles">
+          <div class="tile"><div class="v num">14</div><div class="k">Quotes drafted</div></div>
+          <div class="tile warn"><div class="v num" id="pending">3</div><div class="k">Waiting for your approval</div></div>
+          <div class="tile"><div class="v num">9</div><div class="k">Leads followed up</div></div>
+          <div class="tile"><div class="v num">5</div><div class="k">Jobs booked</div></div>
+        </div>
+        <div class="actions">
+          <button type="button" data-act="approve">Review quotes waiting for approval <span id="pendingTag">3 waiting</span></button>
+          <button type="button" data-act="chase">Follow up on quotes older than 3 days <span>4 quotes</span></button>
+          <button type="button" data-act="summary">Send me today's summary <span>text</span></button>
+        </div>
+        <div class="log" id="log" aria-live="polite"></div>
+      </div>
+      <div>
+        <div class="mem">
+          <span class="eyebrow">Customer memory</span>
+          <b>Priya Patel · 2019 Honda CR-V</b>
+          <span>Turned down front rotors on Mar 12. Prefers texts after 5pm.</span>
+          <span style="color:var(--accent)">Suggestion: mention the rotors when she books her next oil change.</span>
+        </div>
+        <div class="qa">
+          <h3>Ask the shop handbook</h3>
+          <div class="chips" style="padding:0;border:0;min-height:0" id="qaChips"></div>
+          <div class="qa-out" id="qaOut"><span style="color:var(--muted)">Pick a question your crew asks every week.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="display:grid;gap:28px">
+    <div class="pitch" style="max-width:760px">
+      <p class="eyebrow">How a build works</p>
+      <h2>From your price list to a working agent</h2>
+    </div>
+    <ol class="steps">
+      <li><span class="n">1</span><b>You send what you already have</b><span>Your price list, labor rates and 20 or so past quotes.</span></li>
+      <li><span class="n">2</span><b>I build the agent</b><span>Set up to quote the way your shop quotes, with your wording.</span></li>
+      <li><span class="n">3</span><b>We check it together</b><span>The calibration kit compares it with your real quotes until you're happy.</span></li>
+      <li><span class="n">4</span><b>It goes live with you in control</b><span>You approve its quotes at first, and decide when it can do more.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap contact">
+    <p class="eyebrow">Fixed-price builds or remote hourly work</p>
+    <h2>Have quotes piling up? Let's talk.</h2>
+    <p class="lede">Tell me what kind of shop you run and where the work slows down. I'll tell you honestly whether an agent would help.</p>
+    <div class="contact-row">
+      <code id="email">usman@trxmode.com</code>
+      <button class="btn primary" type="button" id="copyEmail">Copy email</button>
+      <a class="btn" href="https://www.linkedin.com/in/chaudhryusmantrx/">LinkedIn</a>
+      <a class="btn" href="https://github.com/xschaudhry">GitHub</a>
+    </div>
+    <div class="contact-row mono" style="font-size:.85rem;color:var(--muted)">
+      <span>+1 (315) 306-6766 (US)</span><span>·</span><span>+92 323 1111411 (WhatsApp)</span><span>·</span><span>Islamabad, Pakistan · Works US hours</span>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">All demos on this page use made-up shops, customers and prices. No real customer data.</div></footer>
+
+<script>
+(function(){
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait = ms => new Promise(r => setTimeout(r, reduce ? 60 : ms));
+const $ = id => document.getElementById(id);
+const money = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+/* ---------- Quoting agent ---------- */
+const RATE = 135, TAX = 0.0825;
+const VEHICLES = {
+  civic:{name:'2018 Honda Civic', p:1, l:1},
+  f150:{name:'2015 Ford F-150', p:1.3, l:1.15},
+  rav4:{name:'2020 Toyota RAV4', p:1.1, l:1}
+};
+const SCEN = {
+  brakes:{
+    ask:'Got it, a grinding noise usually means the pads are worn down to metal. Is the noise from the front, the back, or are you not sure?',
+    say:'Grinding when I brake',
+    opts:{front:'Front', rear:'Back', unsure:'Not sure'},
+    build(a){
+      const axle = a === 'rear' ? 'rear' : 'front';
+      const lines = [
+        {d:`Brake pads, ${axle} set`, k:'part', q:1, u:axle==='rear'?58:68},
+        {d:`Brake rotors, ${axle} (pair)`, k:'part', q:2, u:axle==='rear'?64:71, s:'Grinding usually damages rotors'},
+        {d:'Labor: replace pads and rotors', k:'labor', q:axle==='rear'?1.8:1.6},
+        {d:'Brake fluid check and top-off', k:'part', q:1, u:9}
+      ];
+      if (a === 'unsure') lines.unshift({d:'Brake inspection, all four wheels', k:'labor', q:0.5, s:'We confirm which axle before any work'});
+      return {lines, note: a==='unsure' ? 'Front is most likely, so this estimate is for the front. We inspect first and call you if the back needs work too.' : 'Grinding means metal on metal. We recommend booking within a few days.'};
+    }
+  },
+  ac:{
+    ask:'Thanks. Did the AC stop cooling suddenly, or has it gotten weaker over time?',
+    say:'My AC is blowing warm air',
+    opts:{gradual:'Weaker over time', sudden:'Stopped suddenly'},
+    build(a){
+      if (a === 'sudden') return {lines:[
+        {d:'AC system diagnosis', k:'labor', q:1.0, s:'Pressure test and compressor check'},
+        {d:'Compressor clutch relay (if needed)', k:'part', q:1, u:38},
+        {d:'Labor: relay replacement', k:'labor', q:0.3}
+      ], note:'A sudden stop is often electrical, which is cheaper to fix. If the compressor itself has failed, we will call you with a separate quote before doing any work.'};
+      return {lines:[
+        {d:'AC performance check', k:'labor', q:0.5},
+        {d:'Refrigerant recharge (R-1234yf)', k:'part', q:1, u:95},
+        {d:'UV leak-detection dye', k:'part', q:1, u:18, s:'Lets us find slow leaks'},
+        {d:'Labor: evacuate and recharge', k:'labor', q:0.8}
+      ], note:'A slow fade usually means a small leak. The dye helps us find it at your next visit.'};
+    }
+  },
+  cel:{
+    ask:'Okay. Is the check engine light flashing, or is it on steadily?',
+    say:'My check engine light is on',
+    opts:{steady:'On steadily', flashing:'Flashing'},
+    build(a){
+      return {lines:[
+        {d:'Diagnostic scan and road test', k:'labor', q:1.0, s:'Reads the fault code and confirms the cause'},
+        {d:'Ignition coil (if a misfire is confirmed)', k:'part', q:1, u:86},
+        {d:'Spark plug for that cylinder', k:'part', q:1, u:14},
+        {d:'Labor: coil and plug replacement', k:'labor', q:0.7}
+      ], note: a==='flashing'
+        ? 'A flashing light means an active misfire that can damage the catalytic converter. Please drive gently and book today if you can. Parts and labor below are only charged if the scan confirms a misfire.'
+        : 'A steady light is not urgent, but we recommend a scan this week. Parts and labor below are only charged if the scan confirms a misfire.'};
+    }
+  },
+  maint:{
+    ask:null,
+    say:'Oil change and tire rotation',
+    build(){
+      return {lines:[
+        {d:'Full synthetic oil, 5 qt', k:'part', q:5, u:8.4},
+        {d:'Oil filter', k:'part', q:1, u:12},
+        {d:'Labor: oil change and tire rotation', k:'labor', q:0.6},
+        {d:'Multi-point inspection', k:'part', q:1, u:0, s:'Free with every service'}
+      ], note:'Takes about 45 minutes. You can wait in the lobby.'};
+    }
+  }
+};
+const KEYWORDS = [[/brake|grind|squeal|squeak|pad|rotor/i,'brakes'],[/\bac\b|a\/c|air|cool|cold|warm|hot/i,'ac'],[/engine|light|\bcel\b|misfire|code/i,'cel'],[/oil|rotat|service|maint|tire/i,'maint']];
+
+const msgs = $('msgs'), chips = $('chips');
+let state = {}, estNo = 1046, busy = false;
+
+function add(text, who){
+  const d = document.createElement('div');
+  d.className = 'msg ' + who;
+  d.textContent = text;
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
+async function bot(text, ms=850){
+  const t = add('typing…','bot typing');
+  await wait(ms); t.remove(); add(text,'bot');
+}
+function setChips(list){
+  chips.innerHTML = '';
+  list.forEach(([label, fn]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = label;
+    b.onclick = () => { if (!busy) fn(label); };
+    chips.appendChild(b);
+  });
+}
+async function step(fn){ busy = true; chips.innerHTML=''; try { await fn(); } finally { busy = false; } }
+
+function startChips(){
+  setChips(Object.entries(SCEN).map(([k,s]) => [s.say, () => pick(k, s.say)]));
+}
+function pick(key, said){
+  step(async () => {
+    state = {key};
+    add(said, 'me');
+    await bot('Happy to help with that. What vehicle is it?');
+    setChips(Object.entries(VEHICLES).map(([vk,v]) => [v.name, () => vehicle(vk)]));
+  });
+}
+function vehicle(vk){
+  step(async () => {
+    state.v = vk;
+    add(VEHICLES[vk].name, 'me');
+    const s = SCEN[state.key];
+    if (s.ask){
+      await bot(s.ask);
+      setChips(Object.entries(s.opts).map(([ak,label]) => [label, () => answer(ak, label)]));
+    } else {
+      await finish();
+    }
+  });
+}
+function answer(ak, label){
+  step(async () => { state.a = ak; add(label,'me'); await finish(); });
+}
+async function finish(){
+  const t0 = performance.now();
+  await bot('Thanks, building your estimate from Riverside Auto’s price book…', 700);
+  await wait(900);
+  const v = VEHICLES[state.v], s = SCEN[state.key], r = s.build(state.a);
+  let parts = 0, labor = 0;
+  const rows = r.lines.map(l => {
+    let amt, qty;
+    if (l.k === 'labor'){ const h = +(l.q * v.l).toFixed(1); amt = h * RATE; labor += amt; qty = h + ' hr'; }
+    else { amt = l.q * l.u * v.p; parts += amt; qty = l.q > 1 ? '×' + l.q : ''; }
+    return `<tr><td>${l.d}${qty?` <span class="mono" style="color:var(--muted)">${qty}</span>`:''}${l.s?`<small>${l.s}</small>`:''}</td><td>${amt===0?'Free':money(amt)}</td></tr>`;
+  }).join('');
+  const supplies = Math.min(35, (parts + labor) * 0.04), tax = (parts + supplies) * TAX, total = parts + labor + supplies + tax;
+  estNo++;
+  const slip = document.createElement('div');
+  slip.className = 'slip';
+  slip.innerHTML = `
+    <div class="slip-head"><span>Estimate #RA-${estNo}</span><span>${v.name}</span></div>
+    <table>${rows}
+      <tr class="tot"><td>Parts</td><td>${money(parts)}</td></tr>
+      <tr class="tot"><td>Labor at $${RATE}/hr</td><td>${money(labor)}</td></tr>
+      <tr class="tot"><td>Shop supplies</td><td>${money(supplies)}</td></tr>
+      <tr class="tot"><td>Tax 8.25% on parts and supplies</td><td>${money(tax)}</td></tr>
+      <tr class="grand"><td>Estimated total</td><td>${money(total)}</td></tr>
+    </table>
+    <div class="note">${r.note}</div>
+    <div class="act"><button type="button">Send to owner for approval</button></div>`;
+  slip.querySelector('button').onclick = e => { e.target.disabled = true; e.target.textContent = 'Sent to the owner. The customer gets it once approved.'; };
+  msgs.appendChild(slip);
+  const sp = document.createElement('div');
+  sp.className = 'speed';
+  sp.textContent = `Drafted in ${((performance.now()-t0)/1000).toFixed(1)} seconds · Demo prices`;
+  msgs.appendChild(sp);
+  msgs.scrollTop = msgs.scrollHeight;
+  setChips([['Try another problem', restart]]);
+}
+function restart(){
+  step(async () => { msgs.innerHTML=''; await bot('Hi! I’m Riverside Auto’s quote assistant. Tell me what’s going on with your car, and I’ll put together an estimate.', 500); startChips(); });
+}
+$('chatForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const inp = $('chatText'), text = inp.value.trim();
+  if (!text || busy) return;
+  inp.value = '';
+  const hit = KEYWORDS.find(([re]) => re.test(text));
+  if (hit) return pick(hit[1], text);
+  step(async () => {
+    add(text,'me');
+    await bot('This demo can quote brakes, AC, check engine lights and routine service. Pick one below to see a full estimate.');
+    startChips();
+  });
+});
+restart();
+
+/* ---------- Lead follow-up ---------- */
+const TL = {
+  with:[
+    {t:'Tue 7:42 pm', c:'', b:'Website form from Dana', q:'Water heater is leaking from the bottom. 40 gallon, gas.'},
+    {t:'Tue 7:42 pm', c:'agent', b:'Agent replied in 38 seconds', q:'Hi Dana, sorry about the leak. If water is pooling, turn the cold-water valve on top of the tank clockwise to stop it. A leak from the bottom usually means the tank needs replacing. We can come Wed 8–10 am or 1–3 pm. Which works for you?', p:['ai','Agent']},
+    {t:'Wed 9:05 am', c:'agent', b:'No reply yet, so the agent followed up', q:'Morning Dana, the 1–3 pm slot today is still open. Want me to book it?', p:['ai','Agent']},
+    {t:'Wed 9:31 am', c:'', b:'Dana replied', q:'1–3 works, thank you!'},
+    {t:'Wed 9:31 am', c:'win', b:'Booked for Wed 1–3 pm', s:'Replacement estimate sent: $1,850–$2,300 (example)', p:['ok','Job won']}
+  ],
+  without:[
+    {t:'Tue 7:42 pm', c:'', b:'Website form from Dana', q:'Water heater is leaking from the bottom. 40 gallon, gas.'},
+    {t:'Tue 7:42 pm', c:'', b:'The form sits in the inbox overnight', s:'The office is closed.'},
+    {t:'Wed 8:50 am', c:'', b:'Office sees it and calls Dana', s:'Goes to voicemail.'},
+    {t:'Wed 10:20 am', c:'lose', b:'Dana texted back', q:'Thanks, but I already booked someone last night.', p:['bad','Job lost']}
+  ]
+};
+let tlTimer = [];
+function renderTL(which){
+  tlTimer.forEach(clearTimeout); tlTimer = [];
+  $('tWith').setAttribute('aria-pressed', which==='with');
+  $('tWithout').setAttribute('aria-pressed', which==='without');
+  const ol = $('timeline'); ol.innerHTML = '';
+  TL[which].forEach((e,i) => {
+    const li = document.createElement('li');
+    li.className = e.c;
+    li.style.animationDelay = reduce ? '0s' : (i*0.12)+'s';
+    li.innerHTML = `<time>${e.t}</time><span class="rail"></span><div class="ev">${e.p?`<span class="pill ${e.p[0]}">${e.p[1]}</span>`:''}<b>${e.b}</b>${e.q?`<q>${e.q}</q>`:''}${e.s?`<span style="color:var(--muted);font-size:.9rem">${e.s}</span>`:''}</div>`;
+    ol.appendChild(li);
+  });
+}
+$('tWith').onclick = () => renderTL('with');
+$('tWithout').onclick = () => renderTL('without');
+renderTL('with');
+
+/* ---------- Calibration kit ---------- */
+const JOBS = [
+  ['Front brakes · Civic', 498, 512],
+  ['AC recharge · RAV4', 295, 289],
+  ['Oil change and rotation · F-150', 128, 131],
+  ['Ignition coil · Civic', 340, 361, 'The agent priced the factory (OEM) coil at $86. Your shop uses an aftermarket coil at $65. Fix: add the aftermarket part to the price book.'],
+  ['Rear brakes · F-150', 611, 604],
+  ['40 gal water heater swap', 2080, 2140],
+  ['Furnace igniter replacement', 248, 265, 'The agent added a quarter-hour diagnostic fee. Your shop waives it on igniter jobs. Fix: add that waiver as a rule.'],
+  ['Thermostat install', 214, 210],
+  ['Toilet rebuild', 180, 185],
+  ['Serpentine belt · RAV4', 224, 228]
+];
+const RANGE = 10;
+function renderCal(){
+  const thr = +$('thr').value;
+  $('thrVal').textContent = thr + '%';
+  let flagged = 0;
+  const body = $('calBody'); body.innerHTML = '';
+  JOBS.forEach(([name, mine, ai, why]) => {
+    const pct = (ai - mine) / mine * 100, isFlag = Math.abs(pct) > thr;
+    if (isFlag) flagged++;
+    const pos = 50 + Math.max(-RANGE, Math.min(RANGE, pct)) / RANGE * 50;
+    const bandL = 50 - thr / RANGE * 50, bandW = thr / RANGE * 100;
+    const tr = document.createElement('tr');
+    if (isFlag) { tr.className = 'flag'; tr.tabIndex = 0; tr.title = 'Show why'; }
+    tr.innerHTML = `<td>${name}</td><td class="mono">${money(mine)}</td><td class="mono">${money(ai)}</td><td class="mono" style="color:${isFlag?'var(--bad)':'var(--ok)'}">${pct>0?'+':''}${pct.toFixed(1)}%</td>
+      <td><div class="track" aria-hidden="true"><span class="band" style="left:${Math.max(0,bandL)}%;width:${Math.min(100,bandW)}%"></span><span class="zero"></span><span class="dot" style="left:${pos}%"></span></div></td>`;
+    body.appendChild(tr);
+    if (isFlag){
+      const w = document.createElement('tr');
+      w.className = 'why'; w.hidden = true;
+      w.innerHTML = `<td colspan="5">${why || 'Small rounding difference in labor time. Fix: match the agent’s rounding to your shop’s (nearest 0.1 hr).'}</td>`;
+      body.appendChild(w);
+      const toggle = () => { w.hidden = !w.hidden; };
+      tr.onclick = toggle;
+      tr.onkeydown = e => { if (e.key==='Enter' || e.key===' ') { e.preventDefault(); toggle(); } };
+    }
+  });
+  const okN = JOBS.length - flagged;
+  $('score').innerHTML = `<b>${okN} of ${JOBS.length}</b> within ${thr}% · <span class="f">${flagged} flagged</span>`;
+}
+$('thr').addEventListener('input', renderCal);
+renderCal();
+
+/* ---------- Dashboard ---------- */
+let pending = 3;
+const log = $('log');
+function logLine(t){
+  const d = document.createElement('div');
+  const now = new Date();
+  d.textContent = `${now.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'})}  ${t}`;
+  log.prepend(d);
+  while (log.children.length > 3) log.lastChild.remove();
+}
+document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
+  const a = b.dataset.act;
+  if (a === 'approve'){
+    if (pending > 0){ pending--; logLine(`Approved estimate #RA-${1044 - pending}. Texted to the customer.`); }
+    else logLine('Nothing waiting. You’re all caught up.');
+    $('pending').textContent = pending;
+    $('pendingTag').textContent = pending + ' waiting';
+  }
+  if (a === 'chase') logLine('Sent 4 friendly follow-up texts about open quotes.');
+  if (a === 'summary') logLine('Summary: 14 quotes, 5 booked, $6,420 in approved work (example).');
+});
+const QA = [
+  ['What’s our warranty on brake jobs?', 'Brake pads and rotors are covered for 12 months or 12,000 miles, parts and labor, whichever comes first.', 'Shop handbook §4.2 Warranties'],
+  ['Can I give a repeat customer a discount?', 'Service advisors can take up to 10% off labor for customers with 3 or more visits. Anything bigger needs the owner’s OK.', 'Shop handbook §2.5 Discounts'],
+  ['When do we need the customer’s sign-off?', 'Before any work over $250, or any work that wasn’t on the original estimate. A text reply counts as approval.', 'Shop handbook §3.1 Authorizations']
+];
+const qaChips = $('qaChips'), qaOut = $('qaOut');
+QA.forEach(([q,a,src]) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'chip'; b.textContent = q;
+  b.onclick = async () => {
+    qaOut.innerHTML = '<span class="mono" style="color:var(--muted)">Checking the handbook…</span>';
+    await wait(600);
+    qaOut.innerHTML = `${a}<cite>Source: ${src} (example handbook)</cite>`;
+  };
+  qaChips.appendChild(b);
+});
+
+/* ---------- Contact ---------- */
+$('copyEmail').onclick = async () => {
+  const btn = $('copyEmail'), text = $('email').textContent;
+  try { await navigator.clipboard.writeText(text); btn.textContent = 'Copied'; }
+  catch { const r = document.createRange(); r.selectNodeContents($('email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected, press Ctrl+C'; }
+  setTimeout(() => { btn.textContent = 'Copy email'; }, 2200);
+};
+})();
+</script>
+</body>
+</html>
